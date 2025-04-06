@@ -5,17 +5,16 @@ import 'package:apiprueba/models/movie.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-
   Future<List<Movie>> getPopularMovies() async {
-    return _fetchMovies('${Constants.trendingUrl}');
+    return _fetchMovies(Constants.trendingUrl);
   }
 
   Future<List<Movie>> getUpcomingMovies() async {
-    return _fetchMovies('${Constants.upcomingUrl}');
+    return _fetchMovies(Constants.upcomingUrl);
   }
 
   Future<List<Movie>> getTopRatedMovies() async {
-    return _fetchMovies('${Constants.topRateUrl}');
+    return _fetchMovies(Constants.topRateUrl);
   }
 
   Future<List<Movie>> _fetchMovies(String urlMovie) async {
@@ -27,16 +26,37 @@ class ApiService {
 
     try {
       if (response.statusCode == 200) {
-        final List<dynamic> listOfMovie = json.decode(response.body)['results'] as List;
-        final movieList = listOfMovie.map((movie) => Movie.fromJson(movie)).toList();
+        final List<dynamic> listOfMovie =
+            json.decode(response.body)['results'] as List;
+        final movieList =
+            listOfMovie.map((movie) => Movie.fromJson(movie)).toList();
         // print(movieList);
         return movieList;
       } else {
-      
         throw Exception('Something happened');
       }
     } catch (error) {
       throw Exception('ocurrió un error procesando los datos del API');
+    }
+  }
+
+  Future<List<Movie>> searchMovies(String query) async {
+    final url = Uri.parse(Constants.trendingUrl);
+
+    final response = await http.get(url);
+
+    try {
+      if (response.statusCode == 200) {
+        final List<dynamic> listOfMovie =
+            json.decode(response.body)['results'] as List;
+        final movieList =
+            listOfMovie.map((movie) => Movie.fromJson(movie)).toList();
+        return movieList;
+      } else {
+        throw Exception('Error buscando películas');
+      }
+    } catch (error) {
+      throw Exception('Ocurrió un error procesando los datos del API');
     }
   }
 }

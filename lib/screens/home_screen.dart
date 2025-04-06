@@ -1,3 +1,4 @@
+import 'package:apiprueba/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:apiprueba/services/movie_service.dart';
 import 'package:apiprueba/models/movie.dart';
@@ -12,7 +13,23 @@ class HomeScreenn extends StatelessWidget {
     final api = ApiService();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('PeliApp')),
+      appBar: AppBar(
+        title: const Text('PeliApp'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SearchScreen()),
+              );
+            },
+          ),
+        ],
+      ),
+  
+      
+
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

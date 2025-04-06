@@ -1,3 +1,4 @@
+import 'package:apiprueba/screens/movie_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:apiprueba/models/movie.dart';
 
@@ -17,6 +18,12 @@ class MovieHorizontalList extends StatelessWidget {
           final movie = movies[index];
           return GestureDetector(
             onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => MovieDetailScreen(movie: movie),
+                  ),
+                );
               // Ir a detalle si lo deseas
             },
             child: Container(
