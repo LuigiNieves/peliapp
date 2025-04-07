@@ -1,3 +1,4 @@
+import 'package:apiprueba/constants.dart';
 import 'package:apiprueba/screens/movie_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -37,14 +38,14 @@ class MovieCarousel extends StatelessWidget {
                   fit: StackFit.expand,
                   children: [
                     Image.network(
-                      'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                      '${Constants.imagePath}${movie.posterPath}',
                       fit: BoxFit.cover,
                     ),
                     Positioned(
                       bottom: 0,
                       child: Container(
                         width: MediaQuery.of(context).size.width,
-                        color: Colors.black.withOpacity(0.5),
+                        color: Color.fromRGBO(0, 0, 0, 0.5),
                         padding: const EdgeInsets.all(8),
                         child: Text(
                           movie.title,

@@ -32,7 +32,7 @@ class _SearchScreenState extends State<SearchScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('Error cargando películas: $e');
+      // print('Error cargando películas: $e');
       setState(() => _isLoading = false);
     }
   }
@@ -69,29 +69,30 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             const SizedBox(height: 20),
             _isLoading
-                ? const CircularProgressIndicator()
-                : _filteredMovies.isEmpty
-                ? const Text('No se encontraron coincidencias.')
-                : Expanded(
-                  child: ListView.builder(
-                    itemCount: _filteredMovies.length,
-                    itemBuilder: (context, index) {
-                      final movie = _filteredMovies[index];
-                      return MovieListTile(
-                        movie: movie,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => MovieDetailScreen(movie: movie),
-                            ),
-                          );
-                          // Puedes navegar a detalles si quieres
-                        },
+  ? const CircularProgressIndicator()
+  : _controller.text.isEmpty
+      ? const SizedBox() // No mostrar nada si no hay texto
+      : _filteredMovies.isEmpty
+          ? const Text('No se encontraron coincidencias.')
+          : Expanded(
+              child: ListView.builder(
+                itemCount: _filteredMovies.length,
+                itemBuilder: (context, index) {
+                  final movie = _filteredMovies[index];
+                  return MovieListTile(
+                    movie: movie,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MovieDetailScreen(movie: movie),
+                        ),
                       );
                     },
-                  ),
-                ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
