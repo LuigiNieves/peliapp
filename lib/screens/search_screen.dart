@@ -1,6 +1,7 @@
 import 'package:apiprueba/screens/movie_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:apiprueba/models/movie.dart';
+import 'package:apiprueba/services/movie_repository.dart'; // NUEVO
 import 'package:apiprueba/services/movie_service.dart';
 import 'package:apiprueba/widgets/movie_list_tile.dart';
 
@@ -24,26 +25,37 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Future<void> _loadMovies() async {
-    try {
-      final movies = await ApiService().getPopularMovies(); // O trendingData()
+    final repo = MovieRepository();
+
+    if (repo.popularMovies.isNotEmpty) {
+      // Usar las películas almacenadas
       setState(() {
-        _allMovies = movies;
-        _filteredMovies = movies;
+        _allMovies = repo.popularMovies;
+        _filteredMovies = [];
         _isLoading = false;
       });
-    } catch (e) {
-      // print('Error cargando películas: $e');
-      setState(() => _isLoading = false);
+    } else {
+      // Cargar desde la API y guardar en el repositorio
+      try {
+        final movies = await ApiService().getPopularMovies();
+        setState(() {
+          _allMovies = movies;
+          _filteredMovies = [];
+          _isLoading = false;
+        });
+        repo.popularMovies = movies;
+      } catch (e) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
   void _filterMovies(String query) {
-    final filtered =
-        _allMovies.where((movie) {
-          final titleLower = movie.title.toLowerCase();
-          final searchLower = query.toLowerCase();
-          return titleLower.contains(searchLower);
-        }).toList();
+    final filtered = _allMovies.where((movie) {
+      final titleLower = movie.title.toLowerCase();
+      final searchLower = query.toLowerCase();
+      return titleLower.contains(searchLower);
+    }).toList();
 
     setState(() => _filteredMovies = filtered);
   }
@@ -69,30 +81,31 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             const SizedBox(height: 20),
             _isLoading
-  ? const CircularProgressIndicator()
-  : _controller.text.isEmpty
-      ? const SizedBox() // No mostrar nada si no hay texto
-      : _filteredMovies.isEmpty
-          ? const Text('No se encontraron coincidencias.')
-          : Expanded(
-              child: ListView.builder(
-                itemCount: _filteredMovies.length,
-                itemBuilder: (context, index) {
-                  final movie = _filteredMovies[index];
-                  return MovieListTile(
-                    movie: movie,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => MovieDetailScreen(movie: movie),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
+                ? const CircularProgressIndicator()
+                : _controller.text.isEmpty
+                    ? const SizedBox() // No mostrar nada si no hay texto
+                    : _filteredMovies.isEmpty
+                        ? const Text('No se encontraron coincidencias.')
+                        : Expanded(
+                            child: ListView.builder(
+                              itemCount: _filteredMovies.length,
+                              itemBuilder: (context, index) {
+                                final movie = _filteredMovies[index];
+                                return MovieListTile(
+                                  movie: movie,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            MovieDetailScreen(movie: movie),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
           ],
         ),
       ),

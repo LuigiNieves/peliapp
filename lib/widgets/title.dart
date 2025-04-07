@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 
-class NetflixTitle extends StatelessWidget {
+class APPTitle extends StatelessWidget {
   final String text;
   final double fontSize;
 
-  const NetflixTitle({
+  const APPTitle({
     super.key,
     required this.text,
     this.fontSize = 36,

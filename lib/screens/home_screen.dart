@@ -1,4 +1,5 @@
 import 'package:apiprueba/screens/search_screen.dart';
+import 'package:apiprueba/services/movie_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:apiprueba/services/movie_service.dart';
 import 'package:apiprueba/models/movie.dart';
@@ -63,6 +64,9 @@ class HomeScreenn extends StatelessWidget {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else {
                 final movies = snapshot.data!;
+                if (title == 'Popular') {
+                    MovieRepository().popularMovies = movies;
+  }
                 return useCarousel
                     ? MovieCarousel(movies: movies)
                     : MovieHorizontalList(movies: movies);

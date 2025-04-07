@@ -17,7 +17,7 @@ class MainApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
               title: Center(
-                child: NetflixTitle(text: 'PELIAPP')
+                child: APPTitle(text: 'PELIAPP')
                 ),
               ),
 
